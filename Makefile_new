@@ -1,0 +1,28 @@
+F95 := gfortran
+
+OPT_OPTIMIZE := -O2 -ffpe-trap=invalid,zero,overflow -ffree-line-length-none
+OPT_DEBUG := -O0 -Wall -Wextra -pg -ffpe-trap=invalid,zero,overflow -ffree-line-length-none
+OPT := $(OPT_OPTIMIZE)
+
+LIB := LIB
+
+OBJ_F77 := opkda1.o opkda2.o opkdmain.o
+OBJ_F90 := chemf.o main.o
+
+all: main.exe
+
+main.exe: $(OBJ_F77) $(OBJ_F90)
+	$(F95) $(OPT) -o $@ $(OBJ_F77) $(OBJ_F90)
+
+%.o: %.f90
+	$(F95) $(OPT) -c $< -o $@
+	
+%.o: %.f
+	$(F95) $(OPT) -std=legacy -w -c $< -o $@
+
+
+.PHONY: clean
+clean:
+	rm -f *.o
+	rm -f *.mod
+	rm -f main.exe
